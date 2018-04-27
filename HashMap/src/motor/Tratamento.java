@@ -19,7 +19,9 @@ public class Tratamento {
 	public void noExist(String clausula)  {
 		System.out.println("Qual o valor verdade de " + clausula + "? (1 = vdd; 0 = falso)");
 		int vv = sc.nextInt();
-		hm.insert(clausula, vv);
+		System.out.println("Qual o fator de confiança de " + clausula + "? (0 -100)");
+		int vb = sc.nextInt();
+		hm.insert(clausula, vv, vb);
 	}
 	
 	
@@ -83,6 +85,7 @@ public class Tratamento {
 				}
 			}
 		}
+		this.numClausulas = 0; // se não zerar agora, na proxima iteração de regras vai ter um ruido aqui que vai atrapalhar o resultado final.
 		return this.temp3;
 	}
 	
@@ -91,6 +94,21 @@ public class Tratamento {
 			this.temp3 = this.temp && this.temp2;
 		}if(this.sinal == 0) {
 			this.temp3 = this.temp || this.temp2;
+		}
+	}
+	
+	public String treatmentRule(String regra) {
+		boolean res = treatment(regra);
+		if(res) {
+			return hm.rghm.get(regra);
+		}else {
+			return "(" + regra + ") - não se encaixa";
+		}
+	}
+	
+	public void start() {
+		for(String i : hm.getRules()) {
+			System.out.println("###### " + treatmentRule(i) + " #########");
 		}
 	}
 		

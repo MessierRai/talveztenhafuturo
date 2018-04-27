@@ -7,15 +7,23 @@ import java.util.Map;
 
 public class OpHash {
 	
-	Map<String, Integer> hm = new HashMap<String, Integer>();
+	Map<String, Integer> hm = new HashMap<String, Integer>();  // armazena variavel e valor verdade
+	Map<String, Integer> fchm = new HashMap<String, Integer>(); // armazena variavel e fator de confianca
+	Map<String, String> rghm = new HashMap<String, String>(); // armazena regra e sua conclusao
 	
 	
-	public void insert(String chave, int valor) {
+	public void insertRule(String chave, String conclusao) {
+		rghm.put(chave, conclusao);
+	}
+	
+	public void insert(String chave, int valor, int fatorConfianca) {
 		hm.put(chave, valor);
+		fchm.put(chave, fatorConfianca);
 	}
 	
 	public void remove(String chave) {
 		hm.remove(chave);
+		fchm.remove(chave);
 	}
 	
 	public boolean isEmpty() {
@@ -44,6 +52,15 @@ public class OpHash {
 		
 	}
 	
+	public ArrayList<String> getRules() {
+		ArrayList<String> rules = new ArrayList<String>();
+		Collection<String> aRules = rghm.keySet();
+		for(String i : aRules) {
+			rules.add(i);
+		}
+		return rules;
+	}
+
 	public boolean exist(String clausula) {
 		return hm.containsKey(clausula);
 	}
