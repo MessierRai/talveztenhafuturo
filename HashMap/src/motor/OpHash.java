@@ -35,6 +35,10 @@ public class OpHash {
 		return hm.get(chave);
 	}
 	
+	public Integer getValueFC(String chave) {
+		return fchm.get(chave);
+	}
+	
 	public ArrayList<String> getKeys(Integer valor) { // baseado em um valor retorna um array com as chaves que contem aquele valor
 		ArrayList<String> ah = new ArrayList<String>();
 		Collection<String> am = hm.keySet();
