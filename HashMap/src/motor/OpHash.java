@@ -7,31 +7,31 @@ import java.util.Map;
 
 public class OpHash {
 	
-	Map<String, Integer> hm = new HashMap<String, Integer>();  // armazena variavel e valor verdade
-	Map<String, Integer> fchm = new HashMap<String, Integer>(); // armazena variavel e fator de confianca
-	Map<String, String> rghm = new HashMap<String, String>(); // armazena regra e sua conclusao
+	Map<String, Integer> hm = new HashMap<String, Integer>();  // armazena variavel e valor verdade //hm = hasmap
+	Map<String, Integer> fchm = new HashMap<String, Integer>(); // armazena variavel e fator de confianca // fchm = fator confianca hasmap
+	Map<String, String> rghm = new HashMap<String, String>(); // armazena regra e sua conclusao // rghm = regras hashmap
 	
 	
-	public void insertRule(String chave, String conclusao) {
+	public void inserirRegra(String chave, String conclusao) {
 		rghm.put(chave, conclusao);
 	}
 	
-	public void insert(String chave, int valor, int fatorConfianca) {
+	public void inserir(String chave, int valor, int fatorConfianca) {
 		hm.put(chave, valor);
 		fchm.put(chave, fatorConfianca);
 	}
 	
-	public void remove(String chave) {
+	public void remover(String chave) {
 		hm.remove(chave);
 		fchm.remove(chave);
 	}
 	
-	public boolean isEmpty() {
+	public boolean estaVazio() {
 		return hm.isEmpty();
 		
 	}
 	
-	public Integer getValue(String chave) {
+	public Integer getValor(String chave) {
 		return hm.get(chave);
 	}
 	
@@ -39,7 +39,7 @@ public class OpHash {
 		return fchm.get(chave);
 	}
 	
-	public ArrayList<String> getKeys(Integer valor) { // baseado em um valor retorna um array com as chaves que contem aquele valor
+	public ArrayList<String> getChave(Integer valor) { // baseado em um valor retorna um array com as chaves que contem aquele valor
 		ArrayList<String> ah = new ArrayList<String>();
 		Collection<String> am = hm.keySet();
 		for (String i : am) {
@@ -56,7 +56,7 @@ public class OpHash {
 		
 	}
 	
-	public ArrayList<String> getRules() {
+	public ArrayList<String> getRegras() {
 		ArrayList<String> rules = new ArrayList<String>();
 		Collection<String> aRules = rghm.keySet();
 		for(String i : aRules) {
@@ -65,7 +65,7 @@ public class OpHash {
 		return rules;
 	}
 
-	public boolean exist(String clausula) {
+	public boolean existe(String clausula) {
 		return hm.containsKey(clausula);
 	}
 

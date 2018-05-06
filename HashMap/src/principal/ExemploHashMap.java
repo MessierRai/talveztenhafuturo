@@ -15,8 +15,8 @@ public class ExemploHashMap {
 		
 		//System.out.println(op.getKeys(0));
 		
-		op.insertRule("cansaco e sono", "dormir");
-		op.insertRule("sono e fome", "Deus lhe ajude nesta hora dificil");
+		op.inserirRegra("cansaco e sono", "dormir");
+		op.inserirRegra("sono e fome", "Deus lhe ajude nesta hora dificil");
 		
 		tr.start();
 		

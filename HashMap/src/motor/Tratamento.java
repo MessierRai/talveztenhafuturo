@@ -19,29 +19,29 @@ public class Tratamento {
 		this.hm = hm;
 	}
 	
-	public void noExist(String clausula)  { // se não existe no HashMap, pega o valor verdade e o FC da clausula
+	public void naoExiste(String clausula)  { // se não existe no HashMap, pega o valor verdade e o FC da clausula
 		System.out.println("Qual o valor verdade de " + clausula + "? (1 = vdd; 0 = falso)");
 		int vv = sc.nextInt();
 		System.out.println("Qual o fator de confiança de " + clausula + "? (0 -100)");
 		int vb = sc.nextInt();
-		hm.insert(clausula, vv, vb);
+		hm.inserir(clausula, vv, vb);
 	}
 	
 	
-	public Integer verifyExistence(String clausula) { //verifica se já existe no hashmap
-		if(hm.exist(clausula)) {
-			return hm.getValue(clausula);
+	public Integer verificaExistencia(String clausula) { //verifica se já existe no hashmap
+		if(hm.existe(clausula)) {
+			return hm.getValor(clausula);
 		}else if(clausula.equals("e") || clausula.equals("ou")) {
 			return -1;
 		}else {
-			noExist(clausula);
-			return verifyExistence(clausula);
+			naoExiste(clausula);
+			return verificaExistencia(clausula);
 		}
 	}
 	
-	public boolean valueCl(String c) { //verifica se, quando existe no hasmap, qual o valor verdade da coisas
+	public boolean valorClausula(String c) { //verifica se, quando existe no hasmap, qual o valor verdade da coisas
 		
-			if(verifyExistence(c) == 1) { //se o valor verdade da clausula for verdade
+			if(verificaExistencia(c) == 1) { //se o valor verdade da clausula for verdade
 				if(this.numClausulas == 1) {
 					this.temp = true;
 					this.fcTemp1 = hm.getValueFC(c);
@@ -64,7 +64,7 @@ public class Tratamento {
 		return this.temp;
 	}
 	
-	public int signalCl(String c) { //verifica se é "E" ou "OU"
+	public int sinalClausula(String c) { //verifica se é "E" ou "OU"
 		if(c.equals("e")) {
 			this.sinal = 1;
 			//System.out.println(c + this.sinal);
@@ -76,17 +76,17 @@ public class Tratamento {
 		return this.sinal;
 	}
 	
-	public boolean treatment(String regra) {
+	public boolean tratamento(String regra) {
 		String[] b = regra.split(" ");
 		
 		for(String i : b) {
-			if(verifyExistence(i) == -1) { // se o VerifyExistence retorna -1 é pq é um conectivo lógico
-				signalCl(i);
+			if(verificaExistencia(i) == -1) { // se o VerifyExistence retorna -1 é pq é um conectivo lógico
+				sinalClausula(i);
 			}else {
 				this.numClausulas++;
-				valueCl(i);
+				valorClausula(i);
 				if(this.numClausulas == 2) {
-					isTrue();
+					eVerdade();
 					this.temp = this.temp3;
 					this.fcTemp1 = this.fcTemp3;
 					this.numClausulas = 1;
@@ -97,19 +97,19 @@ public class Tratamento {
 		return this.temp3;
 	}
 	
-	public void isTrue() { // faz o calculo da verdade dependendo do sinal entre as clausulas
+	public void eVerdade() { // faz o calculo da verdade dependendo do sinal entre as clausulas
 		if(this.sinal == 1) {
 			this.temp3 = this.temp && this.temp2;
-			this.fcTemp3 = calculateFC(this.sinal, this.fcTemp1, this.fcTemp2);
+			this.fcTemp3 = calculaFC(this.sinal, this.fcTemp1, this.fcTemp2);
 		}if(this.sinal == 0) {
 			this.temp3 = this.temp || this.temp2;
-			this.fcTemp3 = calculateFC(this.sinal, this.fcTemp1, this.fcTemp2);
+			this.fcTemp3 = calculaFC(this.sinal, this.fcTemp1, this.fcTemp2);
 		}
 	}
 	
-	public String treatmentRule(String regra) { // verifica o valor verdade final da regra, se é verdade retona a conclusão dela
+	public String tratamentoRegra(String regra) { // verifica o valor verdade final da regra, se é verdade retona a conclusão dela
 													// se não, retorna dizendo que a regra não se encaixa
-		boolean res = treatment(regra); //pega o valor verdade final da regra
+		boolean res = tratamento(regra); //pega o valor verdade final da regra
 		if(res) {
 			return hm.rghm.get(regra) + " - FC: " + this.fcTemp3 + "%";
 		}else {
@@ -117,7 +117,7 @@ public class Tratamento {
 		}
 	}
 	
-	public float calculateFC(int sinal, float fc1, float fc2) { // calcula o fator de confianca baseada no sinal
+	public float calculaFC(int sinal, float fc1, float fc2) { // calcula o fator de confianca baseada no sinal
 		float fc = 0;
 		if(sinal == 1) {
 			fc = (fc1 / 100) * (fc2 / 100); //divide por 100 porque precisava de um numero do tipo "0,8" ao invés de 80%
@@ -129,8 +129,8 @@ public class Tratamento {
 	}
 	
 	public void start() {
-		for(String i : hm.getRules()) { // itera sobre cada regra armazenada no HashMap
-			System.out.println("###### " + treatmentRule(i) + " #########");
+		for(String i : hm.getRegras()) { // itera sobre cada regra armazenada no HashMap
+			System.out.println("###### " + tratamentoRegra(i) + " #########");
 		}
 	}
 		
