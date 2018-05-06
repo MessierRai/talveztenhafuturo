@@ -111,9 +111,9 @@ public class Tratamento {
 													// se não, retorna dizendo que a regra não se encaixa
 		boolean res = tratamento(regra); //pega o valor verdade final da regra
 		if(res) {
-			return hm.rghm.get(regra) + " - FC: " + this.fcTemp3 + "%";
+			return hm.rghm.get(regra) + " - FC: " + calculaFCGeral(fcTemp3, regra) + "%" ;
 		}else {
-			return "(" + regra + ") - não se encaixa" + " - FC: " + this.fcTemp3 + "%";
+			return "(" + regra + ") - não se encaixa" + " - FC: " + calculaFCGeral(fcTemp3, regra) + "%";
 		}
 	}
 	
@@ -126,6 +126,11 @@ public class Tratamento {
 		}
 		fc = fc * 100;
 		return fc;
+	}
+	
+	public float calculaFCGeral(float fcCondicao, String regra) {
+		return (fcCondicao * hm.getFCRegra(regra)) / 100;
+		
 	}
 	
 	public void start() {

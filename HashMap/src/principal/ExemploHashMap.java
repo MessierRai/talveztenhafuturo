@@ -12,11 +12,8 @@ public class ExemploHashMap {
 		//op.insert("Invalido ", 1, 60); // 1 - verdadeiro
 		//op.insert("cansacod", 1, 60); // 0 - falso
 		
-		
-		//System.out.println(op.getKeys(0));
-		
-		op.inserirRegra("cansaco e sono", "dormir");
-		op.inserirRegra("sono e fome", "Deus lhe ajude nesta hora dificil");
+		op.inserirRegra("cansaco e sono", "dormir", 100);
+		op.inserirRegra("sono e fome", "Deus lhe ajude nesta hora dificil", 90);
 		
 		tr.start();
 		

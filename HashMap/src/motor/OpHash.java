@@ -10,10 +10,12 @@ public class OpHash {
 	Map<String, Integer> hm = new HashMap<String, Integer>();  // armazena variavel e valor verdade //hm = hasmap
 	Map<String, Integer> fchm = new HashMap<String, Integer>(); // armazena variavel e fator de confianca // fchm = fator confianca hasmap
 	Map<String, String> rghm = new HashMap<String, String>(); // armazena regra e sua conclusao // rghm = regras hashmap
+	Map<String, Integer> fcrghm = new HashMap<String, Integer>(); // armazena a regra e seu fator de confianca // fcrghm = fator confianca regra hashmap
 	
 	
-	public void inserirRegra(String chave, String conclusao) {
+	public void inserirRegra(String chave, String conclusao, int fcRegra) {
 		rghm.put(chave, conclusao);
+		inserirFCRegra(chave, fcRegra);
 	}
 	
 	public void inserir(String chave, int valor, int fatorConfianca) {
@@ -63,6 +65,14 @@ public class OpHash {
 			rules.add(i);
 		}
 		return rules;
+	}
+	
+	public int getFCRegra(String regra) {
+		return fcrghm.get(regra);
+	}
+	
+	public void inserirFCRegra(String regra, int fc) {
+		fcrghm.put(regra, fc);
 	}
 
 	public boolean existe(String clausula) {
