@@ -27,21 +27,9 @@ public class Tratamento {
 		hm.inserir(clausula, vv, vb);
 	}
 	
-	
-	public Integer verificaExistencia(String clausula) { //verifica se já existe no hashmap
-		if(hm.existe(clausula)) {
-			return hm.getValor(clausula);
-		}else if(clausula.equals("e") || clausula.equals("ou")) {
-			return -1;
-		}else {
-			naoExiste(clausula);
-			return verificaExistencia(clausula);
-		}
-	}
-	
 	public boolean valorClausula(String c) { //verifica se, quando existe no hasmap, qual o valor verdade da coisas
 		
-			if(verificaExistencia(c) == 1) { //se o valor verdade da clausula for verdade
+			if(maqInferencia(c) == 1) { //se o valor verdade da clausula for verdade
 				if(this.numClausulas == 1) {
 					this.temp = true;
 					this.fcTemp1 = hm.getValueFC(c);
@@ -80,12 +68,13 @@ public class Tratamento {
 		String[] b = regra.split(" ");
 		
 		for(String i : b) {
-			if(verificaExistencia(i) == -1) { // se o VerifyExistence retorna -1 é pq é um conectivo lógico
+			
+			if(i.equals("e") || i.equals("ou")) { // verifica se é um conectivo lógico
 				sinalClausula(i);
 			}else {
 				this.numClausulas++;
 				valorClausula(i);
-				if(this.numClausulas == 2) {
+				if(this.numClausulas % 2 == 0) {
 					eVerdade();
 					this.temp = this.temp3;
 					this.fcTemp1 = this.fcTemp3;
@@ -98,6 +87,7 @@ public class Tratamento {
 	}
 	
 	public void eVerdade() { // faz o calculo da verdade dependendo do sinal entre as clausulas
+		
 		if(this.sinal == 1) {
 			this.temp3 = this.temp && this.temp2;
 			this.fcTemp3 = calculaFC(this.sinal, this.fcTemp1, this.fcTemp2);
@@ -110,9 +100,14 @@ public class Tratamento {
 	public String tratamentoRegra(String regra) { // verifica o valor verdade final da regra, se é verdade retona a conclusão dela
 													// se não, retorna dizendo que a regra não se encaixa
 		boolean res = tratamento(regra); //pega o valor verdade final da regra
+		int fatorConfianca = 0;
 		if(res) {
+			fatorConfianca = (int) calculaFCGeral(fcTemp3, regra);
+			hm.inserir(hm.rghm.get(regra), 1, fatorConfianca);
 			return hm.rghm.get(regra) + " - FC: " + calculaFCGeral(fcTemp3, regra) + "%" ;
 		}else {
+			fatorConfianca = (int) calculaFCGeral(fcTemp3, regra);
+			hm.inserir(hm.rghm.get(regra), 0, fatorConfianca);
 			return "(" + regra + ") - não se encaixa" + " - FC: " + calculaFCGeral(fcTemp3, regra) + "%";
 		}
 	}
@@ -133,9 +128,25 @@ public class Tratamento {
 		
 	}
 	
-	public void start() {
-		for(String i : hm.getRegras()) { // itera sobre cada regra armazenada no HashMap
-			System.out.println("###### " + tratamentoRegra(i) + " #########");
+	public void start(String clausula) { // inicia passando a conclusão que queremos saber o resultado.
+		maqInferencia(clausula);
+	}
+	
+	public Integer maqInferencia(String clausula) {
+		if(hm.existe(clausula)) { // se ja existe, retorne o valor.
+			return hm.getValor(clausula);
+		}else { // se não...
+			for(String regra: hm.getRegras()) { // dentre todas as regras
+				if(hm.rghm.get(regra).equals(clausula)) { // escolha apenas as regras cuja conclusao seja a clausula atual.
+					System.out.println(tratamentoRegra(regra));
+				}	
+			}
+			if(hm.getValor(clausula) != null) { // esse if é um pouco redundante, mas deixe aí
+				return hm.getValor(clausula);
+			}else { // se ele não encontrar ninguem nas regras onde a clausula seja a conclusao...
+				naoExiste(clausula); // pegunta a o usuario o valor da clausula
+				return hm.getValor(clausula); //e retorna.
+			}
 		}
 	}
 		
